@@ -24,6 +24,9 @@
       <arg choice="opt">
         motd_dir=<replaceable>/path/dirname.d</replaceable>
       </arg>
+      <arg choice="opt">
+        noupdate
+      </arg>
     </cmdsynopsis>
   </refsynopsisdiv>
 
