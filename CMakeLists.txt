@@ -4,9 +4,9 @@ project(bsd_pam_motd C)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
-if(NOT PAM_INSTALL_PREFIX)
+if (NOT PAM_INSTALL_PREFIX)
     set(PAM_INSTALL_PREFIX "/usr/local")
-endif()
+endif ()
 set(PAM_INSTALL_LIBDIR "${PAM_INSTALL_PREFIX}/lib")
 set(PAM_SHARE_DIR "${PAM_INSTALL_PREFIX}/share/man")
 
@@ -53,5 +53,16 @@ if (DOCBOOK_TO_MAN)
             COMMAND
             ${DOCBOOK_TO_MAN} "${PROJECT_SOURCE_DIR}/pam_motd.8.xml"
             )
-    install(FILES ${CMAKE_BINARY_DIR}/pam_motd.8  DESTINATION ${PAM_SHARE_DIR}/man8/ )
+    install(FILES ${CMAKE_BINARY_DIR}/pam_motd.8 DESTINATION ${PAM_SHARE_DIR}/man8/)
 endif ()
+
+# support for make uninstall
+if(NOT TARGET uninstall)
+    configure_file(
+            "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+            "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+            IMMEDIATE @ONLY)
+
+    add_custom_target(uninstall
+            COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+endif()
