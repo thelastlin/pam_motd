@@ -1,5 +1,5 @@
 # pam_motd
-Porting Debian flavor of pam_motd (a part of Linux-PAM) to OpenPAM used by FreeBSD, macOS, and some Linux distros.
+Porting Debian/Ubuntu flavor of pam_motd (a part of Linux-PAM) to OpenPAM used by FreeBSD, macOS, and some Linux distros.
 
 # Build&Install
 

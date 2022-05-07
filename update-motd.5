@@ -1,0 +1,67 @@
+.TH update-motd 5 "13 April 2010" "update-motd"
+
+.SH NAME
+update-motd \- dynamic MOTD generation
+
+.SH SYNOPSIS
+.B /etc/update-motd.d/*
+
+.SH DESCRIPTION
+UNIX/Linux system adminstrators often communicate important information to console and remote users by maintaining text in the file \fI/etc/motd\fP, which is displayed by the \fBpam_motd\fP(8) module on interactive shell logins.
+
+Traditionally, this file is static text, typically installed by the distribution and only updated on release upgrades, or overwritten by the local administrator with pertinent information.
+
+Ubuntu introduced the \fBupdate-motd\fP framework, by which the \fBmotd\fP(5) is dynamically assembled from a collection of scripts at login.
+
+Executable scripts in \fI/etc/update-motd.d/*\fP are executed by \fBpam_motd\fP(8) as the root user at each login, and this information is concatenated in \fI/run/motd.dynamic\fP.  The order of script execution is determined by the \fBrun-parts\fP(8) --lsbsysinit option (basically alphabetical order, with a few caveats).
+
+On Ubuntu systems, \fI/etc/motd\fP is typically a symbolic link to \fI/run/motd.dynamic\fP.
+
+.SH BEST PRACTICES
+MOTD fragments must be scripts in \fI/etc/update-motd.d\fP, must be executable, and must emit information on standard out.
+
+Scripts should be named named NN-xxxxxx where NN is a two digit number indicating their position in the MOTD, and xxxxxx is an appropriate name for the script.
+
+Scripts must not have filename extensions, per \fBrun-parts\fP(8) --lsbsysinit instructions.
+
+Packages should add scripts directly into \fI/etc/update-motd.d\fP, rather than symlinks to other scripts, such that administrators can modify or remove these scripts and upgrades will not wipe the local changes.  Consider using a simple shell script that simply calls \fBexec\fP on the external utility.
+
+Long running operations (such as network calls) or resource intensive scripts should cache output, and only update that output if it is deemed expired.  For instance:
+
+  /etc/update-motd.d/50-news
+  #!/bin/sh
+  out=/run/foo
+  script="w3m -dump http://news.google.com/"
+  if [ -f "$out" ]; then
+    # Output exists, print it
+    echo
+    cat "$out"
+    # See if it's expired, and background update
+    lastrun=$(stat -c %Y "$out") || lastrun=0
+    expiration=$(expr $lastrun + 86400)
+    if [ $(date +%s) -ge $expiration ]; then
+      $script > "$out" &
+    fi
+  else
+    # No cache at all, so update in the background
+    $script > "$out" &
+  fi
+
+Scripts should emit a blank line before output, and end with a newline character.  For instance:
+
+  /etc/update-motd/05-lsb-release
+  #!/bin/sh
+  echo
+  lsb-release -a
+
+.SH FILES
+\fI/etc/motd\fP, \fI/run/motd.dynamic\fP, \fI/etc/update-motd.d\fP
+
+
+.SH SEE ALSO
+\fBmotd\fP(5), \fBpam_motd\fP(8), \fBrun-parts\fP(8)
+
+.SH AUTHOR
+This manpage and the update-motd framework was written by Dustin Kirkland <kirkland@canonical.com> for Ubuntu systems (but may be used by others).  Permission is granted to copy, distribute and/or modify this document under the terms of the GNU General Public License, Version 3 published by the Free Software Foundation.
+
+On Debian systems, the complete text of the GNU General Public License can be found in /usr/share/common-licenses/GPL.
