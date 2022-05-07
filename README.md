@@ -9,6 +9,8 @@ $ cmake .. && make
 $ sudo make install # Root priviledge required.
 ```
 
+`run-parts`(in `debianutils`) is required to make the module able to run the scripts in `/etc/update-motd.d`.
+
 ----------------
 # DISCLAMER
 
