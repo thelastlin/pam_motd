@@ -309,13 +309,13 @@ static int drop_privileges(pam_handle_t *pamh, struct pam_modutil_privs *privs)
     return PAM_SUCCESS;
 }
 
-
 static int try_to_display(pam_handle_t *pamh, char **motd_path_split,
                           unsigned int num_motd_paths,
                           char **motd_dir_path_split,
                           unsigned int num_motd_dir_paths, int report_missing)
 {
     PAM_MODUTIL_DEF_PRIVS(privs);
+
     if (drop_privileges(pamh, &privs) != PAM_SUCCESS) {
         pam_syslog(pamh, LOG_ERR, "Unable to drop privileges");
         return PAM_SESSION_ERR;
@@ -412,7 +412,6 @@ finished:
     }
     return retval;
 }
-
 
 int pam_sm_open_session(pam_handle_t *pamh, int flags,
 			int argc, const char **argv)
