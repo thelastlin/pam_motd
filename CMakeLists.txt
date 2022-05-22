@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 project(bsd_pam_motd C)
 
+# options
+option(PAM_MOTD_REGEN_MAN "Regenerate manuals of PAM_MOTD.8" OFF)
+option(PAM_MOTD_INSTALL_MAN "Install manual" ON)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
@@ -11,7 +14,15 @@ set(PAM_INSTALL_LIBDIR "${PAM_INSTALL_PREFIX}/lib")
 set(PAM_SHARE_DIR "${PAM_INSTALL_PREFIX}/share/man")
 
 find_package(PAM REQUIRED)
-find_program(DOCBOOK_TO_MAN NAMES docbook2x-man db2x_docbook2man docbook2man docbook-to-man)
+
+if (PAM_MOTD_INSTALL_MAN AND PAM_MOTD_REGEN_MAN)
+   find_program(MAN_GEN NAMES xsltproc)
+   if (NOT MAN_GEN)
+       message(WARNING "It seems that you don't have install xsltproc and other stuff. PAM_MOTD_REGEN_MAN will be turned off.")
+       set(PAM_MOTD_REGEN_MAN OFF)
+   endif()
+endif()
+
 include_directories(. ./include)
 
 #check UNUSED
@@ -40,6 +51,8 @@ LIST(APPEND pam_motd_SRCS
         pam_modutil/ioloop.c
         pam_modutil/cleanup.c
         )
+set(pam_motd_MAN_SRCS pam_motd.8)
+set(pam_motd_MAN update-motd.5)
 
 add_library(${library_name} MODULE ${pam_motd_SRCS})
 set_target_properties(${library_name} PROPERTIES PREFIX "")
@@ -47,14 +60,21 @@ target_link_libraries(${library_name}
         ${PAM_LIBRARIES}
         )
 install(TARGETS ${library_name} DESTINATION ${PAM_INSTALL_LIBDIR}/security)
-if (DOCBOOK_TO_MAN)
-    add_custom_target(pam_motd.8
-            ALL
-            COMMAND
-            ${DOCBOOK_TO_MAN} "${PROJECT_SOURCE_DIR}/pam_motd.8.xml"
-            )
-    install(FILES ${CMAKE_BINARY_DIR}/pam_motd.8 DESTINATION ${PAM_SHARE_DIR}/man8/)
-    install(FILES man/update-motd.5 DESTINATION ${PAM_SHARE_DIR}/man5/)
+
+if (PAM_MOTD_INSTALL_MAN)
+    if (PAM_MOTD_REGEN_MAN)
+        foreach(build_man_file IN LISTS pam_motd_MAN_SRCS)
+             add_custom_target(${build_man_file}
+                ALL
+                COMMAND
+                xsltproc -o ${CMAKE_BINARY_DIR}/${build_man_file} --path . --xinclude --stringparam profile.condition 'without_vendordir' --nonet ${PROJECT_SOURCE_DIR}/man/custom-man.xsl ${PROJECT_SOURCE_DIR}/man/${build_man_file}.xml
+                )
+        endforeach()
+    else()
+        configure_file(man/pam_motd.8 ${CMAKE_BINARY_DIR}/pam_motd.8 COPYONLY)
+    endif ()
+        install(FILES ${CMAKE_BINARY_DIR}/pam_motd.8 DESTINATION ${PAM_SHARE_DIR}/man8/)
+        install(FILES man/update-motd.5 DESTINATION ${PAM_SHARE_DIR}/man5/)
 endif ()
 
 # support for make uninstall

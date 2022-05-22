@@ -7,7 +7,7 @@
   <refmeta>
     <refentrytitle>pam_motd</refentrytitle>
     <manvolnum>8</manvolnum>
-    <refmiscinfo class="sectdesc">PAM_motd Manual</refmiscinfo>
+    <refmiscinfo class="sectdesc">pam_motd Manual</refmiscinfo>
   </refmeta>
 
   <refnamediv id="pam_motd-name">

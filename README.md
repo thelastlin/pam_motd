@@ -11,6 +11,13 @@ $ sudo make install # Root priviledge required.
 
 `run-parts`(in `debianutils`) is required to make the module able to run the scripts in `/etc/update-motd.d`.
 
+Some CMake Options:
+
+| Options | Default value | Comments |
+|---------|---------------|----------|
+| PAM_MOTD_REGEN_MAN | OFF  | Regenerate pam_motd.8.xml        |
+| PAM_MOTD_INSTALL_MAN | ON | Install Manuals |
+
 ----------------
 # DISCLAMER
 
