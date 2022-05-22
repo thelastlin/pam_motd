@@ -54,7 +54,7 @@ if (DOCBOOK_TO_MAN)
             ${DOCBOOK_TO_MAN} "${PROJECT_SOURCE_DIR}/pam_motd.8.xml"
             )
     install(FILES ${CMAKE_BINARY_DIR}/pam_motd.8 DESTINATION ${PAM_SHARE_DIR}/man8/)
-    install(FILES update-motd.5 DESTINATION ${PAM_SHARE_DIR}/man5/)
+    install(FILES man/update-motd.5 DESTINATION ${PAM_SHARE_DIR}/man5/)
 endif ()
 
 # support for make uninstall
