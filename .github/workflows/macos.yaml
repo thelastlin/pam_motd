@@ -1,0 +1,50 @@
+name: macos-amd64
+on:
+  push:
+    # branches: [main]
+    paths:
+    - '.github/workflows/macos.yaml'
+    - 'CMakeLists.txt'
+    - 'config.h.in'
+    - 'pam_*.c'
+    - 'cmake/**'
+    - 'include/*'
+    - 'pam_modutil/**'
+  pull_request:
+    # branches: [main]
+    paths: 
+    - '.github/workflows/macos.yaml'
+    - 'CMakeLists.txt'
+    - 'config.h.in'
+    - 'pam_*.c'
+    - 'cmake/**'
+    - 'include/*'
+    - 'pam_modutil/**'
+concurrency:
+  group: macos-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+
+jobs:
+  macos-clang:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: build
+      run: | 
+        mkdir build && cd build
+        arch
+        cmake .. \
+            -DPAM_INSTALL_PREFIX="$(pwd)/installroot"
+        cmake --build . -j 2
+    - name: test_install
+      run: |
+        pwd
+        cd build
+        make install
+    - name: test_uninstall
+      run: |
+        pwd
+        cd build 
+        make uninstall 
