@@ -35,6 +35,7 @@ jobs:
       run: | 
         mkdir build && cd build
         arch
+        uname -a
         cmake .. \
             -DPAM_INSTALL_PREFIX="$(pwd)/installroot"
         cmake --build . -j 2
