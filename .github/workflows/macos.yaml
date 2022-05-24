@@ -1,7 +1,7 @@
 name: macos-amd64
 on:
   push:
-    # branches: [main]
+    branches: [main]
     paths:
     - '.github/workflows/macos.yaml'
     - 'CMakeLists.txt'
