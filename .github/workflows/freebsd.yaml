@@ -37,26 +37,18 @@ jobs:
         usesh: true
         prepare: pkg install -y cmake
         run: |
+          echo 'build>>>>>>>>>>>>>>>>>>>>'
           pwd
           arch
           mkdir build && cd build
           cmake .. \
               -DPAM_INSTALL_PREFIX="$(pwd)/installroot"
           cmake --build . -j 2
-    - name: test_install
-      uses: vmactions/freebsd-vm@v0.1.5
-      with:
-        usesh: true
-        run: |
+          echo 'install>>>>>>>>>>>>>>>>>>>>'
+          sleep 10
           pwd
-          cd build
           make install
-    
-    - name: test_uninstall
-      uses: vmactions/freebsd-vm@v0.1.5
-      with:
-        usesh: true
-        run: |
+          echo 'uninstall>>>>>>>>>>>>>>>>>>>>'
+          sleep 10
           pwd
-          cd build
           make uninstall
