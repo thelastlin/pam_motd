@@ -9,11 +9,19 @@
 #ifndef _PORTING_H
 #define _PORTING_H
 
+/* -------------- Special defines used by Linux-PAM -------------- */
+
 #if defined(__GNUC__) && defined(__GNUC_MINOR__)
 # define PAM_GNUC_PREREQ(maj, min) \
         ((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
 #else
 # define PAM_GNUC_PREREQ(maj, min) 0
+#endif
+
+#if PAM_GNUC_PREREQ(3,1)
+# define PAM_DEPRECATED __attribute__((__deprecated__))
+#else
+# define PAM_DEPRECATED
 #endif
 
 /* ... adapted from the pam_appl.h file created by Theodore Ts'o and
