@@ -3,6 +3,8 @@
 #define CONFIG_H_AUTOGEN
 #cmakedefine HAVE_ATTRIBUTE_UNUSED
 #cmakedefine HAVE_GETPWNAM_R
+#cmakedefine HAVE_EXPLICIT_BZERO
+#cmakedefine HAVE_MEMSET_EXPLICIT
 
 #ifdef  HAVE_ATTRIBUTE_UNUSED
 #define UNUSED __attribute__((unused))

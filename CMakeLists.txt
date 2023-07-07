@@ -38,6 +38,8 @@ check_c_source_compiles("
 #check pwn
 include(CheckSymbolExists)
 check_symbol_exists(getpwnam_r "pwd.h" HAVE_GETPWNAM_R)
+check_symbol_exists(explicit_bzero "string.h" HAVE_EXPLICIT_BZERO)
+check_symbol_exists(memset_explicit "string.h" HAVE_MEMSET_EXPLICIT)
 
 configure_file(config.h.in config.h)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})

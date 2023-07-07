@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: pam_motd
 .\"    Author: [see the "AUTHOR" section]
-.\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 05/22/2022
+.\" Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
+.\"      Date: 06/11/2023
 .\"    Manual: pam_motd Manual
-.\"    Source: pam_motd Manual
+.\"    Source: pam_motd
 .\"  Language: English
 .\"
-.TH "PAM_MOTD" "8" "05/22/2022" "pam_motd Manual" "pam_motd Manual"
+.TH "PAM_MOTD" "8" "06/11/2023" "pam_motd" "pam_motd Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -93,7 +93,7 @@ The
 environment variable is set after showing the motd files, even when all of them were silenced using symbolic links\&.
 .SH "OPTIONS"
 .PP
-\fBmotd=\fR\fB\fI/path/filename\fR\fR
+motd=/path/filename
 .RS 4
 The
 /path/filename
@@ -101,7 +101,7 @@ file is displayed as message of the day\&. Multiple paths to try can be specifie
 /etc/motd:/var/run/motd:/usr/lib/motd\&.
 .RE
 .PP
-\fBmotd_dir=\fR\fB\fI/path/dirname\&.d\fR\fR
+motd_dir=/path/dirname\&.d
 .RS 4
 The
 /path/dirname\&.d
@@ -109,7 +109,7 @@ directory is scanned and each file contained inside of it is displayed\&. Multip
 /etc/motd\&.d:/run/motd\&.d:/usr/lib/motd\&.d\&.
 .RE
 .PP
-\fBnoupdate\fR
+noupdate
 .RS 4
 Don\*(Aqt run the scripts in
 /etc/update\-motd\&.d
