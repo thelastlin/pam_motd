@@ -14,6 +14,11 @@ pam_modutil_read(int fd, char *buffer, int count)
 {
     int block, offset = 0;
 
+    if (count < 0) {
+        errno = EINVAL;
+        return -1;
+    }
+
     while (count > 0) {
         block = read(fd, &buffer[offset], count);
 
