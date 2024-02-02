@@ -45,9 +45,7 @@ pam_modutil_getpwnam(pam_handle_t *pamh, const char *user)
 	    D(("out of memory"));
 
 	    /* no memory for the user - so delete the memory */
-	    if (buffer) {
-		free(buffer);
-	    }
+	    free(buffer);
 	    return NULL;
 	}
 	buffer = new_buffer;
@@ -109,7 +107,7 @@ pam_modutil_getpwnam(pam_handle_t *pamh, const char *user)
 
     } while (length < PWD_ABSURD_PWD_LENGTH);
 
-    D(("pwd structure took %u bytes or so of memory",
+    D(("pwd structure took %zu bytes or so of memory",
        length+sizeof(struct passwd)));
 
     free(buffer);
