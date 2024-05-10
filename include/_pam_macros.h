@@ -95,6 +95,9 @@ do {                                              \
 #define _PAM_LOGFILE "/var/run/pam-debug.log"
 #endif
 
+#ifdef UNUSED
+UNUSED
+#endif
 static void _pam_output_debug_info(const char *file, const char *fn
 				   , const int line)
 {
@@ -121,6 +124,10 @@ static void _pam_output_debug_info(const char *file, const char *fn
         fclose(logfile);
 }
 
+#ifdef UNUSED
+UNUSED
+#endif
+PAM_FORMAT((printf, 1, 2))
 static void _pam_output_debug(const char *format, ...)
 {
     va_list args;

@@ -18,6 +18,12 @@
 # define PAM_GNUC_PREREQ(maj, min) 0
 #endif
 
+#if PAM_GNUC_PREREQ(2,5)
+# define PAM_FORMAT(params) __attribute__((__format__ params))
+#else
+# define PAM_FORMAT(params)
+#endif
+
 #if PAM_GNUC_PREREQ(3,1)
 # define PAM_DEPRECATED __attribute__((__deprecated__))
 #else
