@@ -34,7 +34,7 @@ do {                                    \
      PAM_DEPRECATED register char *xx_; \
      register unsigned int i_ = 0;      \
      if ((xx_=(x)))                     \
-        for (;i_<n; i_++)               \
+        for (;i_<(n); i_++)             \
             xx_[i_] = 0;                \
 } while (0)
 
@@ -45,7 +45,7 @@ do {                                    \
 #define _pam_drop(X) \
 do {                 \
     free(X);         \
-    X=NULL;          \
+    (X)=NULL;        \
 } while (0)
 
 /*
@@ -53,17 +53,16 @@ do {                 \
  */
 
 #define _pam_drop_reply(/* struct pam_response * */ reply, /* int */ replies) \
-do {                                              \
-    PAM_DEPRECATED int reply_i;                   \
-                                                  \
-    for (reply_i=0; reply_i<replies; ++reply_i) { \
-	if (reply[reply_i].resp) {                \
-	    _pam_overwrite(reply[reply_i].resp);  \
-	    free(reply[reply_i].resp);            \
-	}                                         \
-    }                                             \
-    if (reply)                                    \
-    free(reply);                                  \
+do {                                                \
+    PAM_DEPRECATED int reply_i;                     \
+                                                    \
+    for (reply_i=0; reply_i<(replies); ++reply_i) { \
+	if ((reply)[reply_i].resp) {                \
+	    _pam_overwrite((reply)[reply_i].resp);  \
+	    free((reply)[reply_i].resp);            \
+	}                                           \
+    }                                               \
+    free(reply);                                    \
 } while (0)
 
 /* some debugging code */
@@ -95,11 +94,25 @@ do {                                              \
 #define _PAM_LOGFILE "/var/run/pam-debug.log"
 #endif
 
+#ifdef PAM_NO_HEADER_FUNCTIONS
+UNUSED
+extern void _pam_output_debug_info(const char *file, const char *fn
+				   , const int line);
+UNUSED
+PAM_FORMAT((printf, 1, 2))
+extern void _pam_output_debug(const char *format, ...);
+#else
+#ifdef PAM_DEBUG_C
+#define PAM_DEBUG_SCOPE
+#else
+#define PAM_DEBUG_SCOPE static
+#endif
+
 #ifdef UNUSED
 UNUSED
 #endif
-static void _pam_output_debug_info(const char *file, const char *fn
-				   , const int line)
+PAM_DEBUG_SCOPE void _pam_output_debug_info(const char *file, const char *fn
+					    , const int line)
 {
     FILE *logfile;
     int must_close = 1, fd;
@@ -128,7 +141,7 @@ static void _pam_output_debug_info(const char *file, const char *fn
 UNUSED
 #endif
 PAM_FORMAT((printf, 1, 2))
-static void _pam_output_debug(const char *format, ...)
+PAM_DEBUG_SCOPE void _pam_output_debug(const char *format, ...)
 {
     va_list args;
     FILE *logfile;
@@ -158,6 +171,8 @@ static void _pam_output_debug(const char *format, ...)
 
     va_end(args);
 }
+#undef PAM_DEBUG_SCOPE
+#endif
 
 #define D(x) do { \
     _pam_output_debug_info(__FILE__, __FUNCTION__, __LINE__); \

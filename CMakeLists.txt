@@ -56,9 +56,13 @@ LIST(APPEND pam_motd_SRCS
 set(pam_motd_MAN_SRCS pam_motd.8)
 set(pam_motd_MAN update-motd.5)
 
+add_compile_definitions(PAM_NO_HEADER_FUNCTIONS)
+add_library(libpam_internal STATIC libpam_internal/pam_debug.c)
+
 add_library(${library_name} MODULE ${pam_motd_SRCS})
 set_target_properties(${library_name} PROPERTIES PREFIX "")
 target_link_libraries(${library_name}
+        libpam_internal
         ${PAM_LIBRARIES}
         )
 install(TARGETS ${library_name} DESTINATION ${PAM_INSTALL_LIBDIR}/security)
